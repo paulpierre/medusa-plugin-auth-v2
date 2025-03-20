@@ -1,0 +1,106 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: medusa-docker
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - medusa-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: cache
+    expose:
+      - 6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - medusa-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: medusa-auth-server
+    command: sh -c "yarn && yarn build && yarn start"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@postgres:5432/medusa-docker}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      NODE_ENV: development
+      JWT_SECRET: ${JWT_SECRET}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+      CACHE_REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      PORT: ${BACKEND_PORT:-9000}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-http://localhost:9000/store/auth/google/callback}
+      STORE_CORS: ${STORE_CORS:-http://localhost:8000,http://frontend:8000}
+      ADMIN_CORS: ${ADMIN_CORS:-http://localhost:7001,http://admin:7001}
+      STORE_URL: ${STORE_URL:-http://localhost:8000}
+      BACKEND_URL: ${BACKEND_URL:-http://localhost:9000}
+      AUTH_STORE_CALLBACK_URL: ${AUTH_STORE_CALLBACK_URL:-http://localhost:8000/callback}
+      # Additional environment variables for better plugin resolution
+      NPM_CONFIG_LEGACY_PEER_DEPS: ${NPM_CONFIG_LEGACY_PEER_DEPS:-true}
+      PGHOST: ${PGHOST:-postgres}
+      PGUSER: ${PGUSER:-postgres}
+      PGPASSWORD: ${PGPASSWORD:-postgres}
+      PGDATABASE: ${PGDATABASE:-medusa-docker}
+    ports:
+      - "${BACKEND_PORT:-9000}:${BACKEND_PORT:-9000}"
+    volumes:
+      # Mount the entire directory for development
+      - .:/app/medusa
+      # Use volume for node_modules to avoid overwriting with host files
+      - node_modules:/app/medusa/node_modules
+      # Create a volume for dist to persist compiled files
+      - dist:/app/medusa/dist
+    networks:
+      - medusa-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: medusa-auth-frontend
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      NEXT_PUBLIC_MEDUSA_BACKEND_URL: ${BACKEND_URL:-http://localhost:9000}
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      NEXT_PUBLIC_GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      NEXT_PUBLIC_GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-http://localhost:9000/auth/google/callback}
+    depends_on:
+      - backend
+    networks:
+      - medusa-network
+    restart: unless-stopped
+
+networks:
+  medusa-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  node_modules:
+  dist:

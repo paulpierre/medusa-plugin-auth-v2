@@ -1,0 +1,93 @@
+# Build artifacts
+/dist
+build/
+.cache
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+/node_modules
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+package-lock.json
+
+# System files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs
+*.log
+yarn-error.log
+npm-debug.log*
+yarn-debug.log*
+
+# Database files
+medusa-db.sql
+/uploads
+
+# Runtime data
+.medusa/
+tsconfig.tsbuildinfo
+
+# Editor-specific files
+.cursorrules
+.windsurfrules
+
+# .env
+# .env.local
+# .env.*.local
+
+.env
+.DS_Store
+package-lock.json
+yarn.lock
+*.log
+
+.cursorrules
+.windsurfrules
+TODO.md
+# MIGRATION.md
+
+frontend/node_modules
+admin/node_modules
+.specstory/
+
+# Test coverage reports
+coverage/
+.nyc_output/
+
+# MedusaJS v2 specific
+.medusa-dev/
+.medusa-plugins/
+
+# Generated documentation
+docs/api/generated/
+
+# Temp files
+.tmp/
+tmp/
+
+# Admin UI build files if you have admin extensions
+src/admin/build/
+dist-admin/
+
+# Local development files
+.local/
+*.local.js
+*.local.ts
+
+# Debug files
+.debug/
+debug.log
+
+# Yarn v2 zero-installs if you're using it
+.pnp.*

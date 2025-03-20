@@ -1,0 +1,20 @@
+{
+  "name": "medusa-admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "medusa-admin develop --hot-reload",
+    "build": "medusa-admin build",
+    "start": "medusa-admin start"
+  },
+  "dependencies": {
+    "@medusajs/admin-next": "^0.0.1",
+    "@medusajs/medusa": "^1.18.0",
+    "dotenv": "16.4.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

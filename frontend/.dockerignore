@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.git
+*.log
+
+frontend/node_modules
+admin/node_modules
+.specstory/
+yarn.lock

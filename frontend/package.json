@@ -1,0 +1,13 @@
+{
+  "name": "medusa-auth-plugin-demo-frontend",
+  "version": "1.0.0",
+  "description": "Demo frontend for the medusa-plugin-auth-v2",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  }
+}
