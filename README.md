@@ -24,6 +24,18 @@
 - 🛡️ TypeScript Support
 - 🐳 Docker Test Environment Included
 
+## Screenshots
+
+### Initial Login Screen
+<p align="center">
+  <img src="https://github.com/paulpierre/medusa-plugin-auth-v2/blob/main/uploads/2.png?raw=true" alt="Initial Login Screen" width="600" />
+</p>
+
+### Successful Authentication Screen
+<p align="center">
+  <img src="https://github.com/paulpierre/medusa-plugin-auth-v2/blob/main/uploads/1.png?raw=true" alt="Successful Authentication Screen" width="600" />
+</p>
+
 ## Prerequisites
 
 - [Medusa backend](https://docs.medusajs.com/development/backend/install)
