@@ -32,7 +32,6 @@ yarn-debug.log*
 
 # Database files
 medusa-db.sql
-/uploads
 
 # Runtime data
 .medusa/
